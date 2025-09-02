@@ -24,7 +24,14 @@ function create_medium (largeball: Sprite, goleft: boolean) {
         mySprite2.vx = 50
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.mini, function (sprite, otherSprite) {
+    game.gameOver(false)
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    list = sprites.allOfKind(SpriteKind.Projectile)
+    for (let value of list) {
+        sprites.destroy(projectile, effects.spray, 500)
+    }
     projectile = sprites.createProjectileFromSprite(img`
         .2.
         .2.
@@ -151,6 +158,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.mini, function (sprite, otherSprite) {
     sprites.destroy(sprite)
     sprites.destroy(otherSprite, effects.fire, 500)
+    info.changeScoreBy(3)
 })
 function create_large_bubble () {
     mySprite2 = sprites.create(img`
@@ -181,6 +189,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.medium, function (sprite, ot
     create_mini(otherSprite, false)
     sprites.destroy(sprite)
     sprites.destroy(otherSprite)
+    info.changeScoreBy(2)
 })
 function create_mini (mediumball: Sprite, goleft: boolean) {
     mySprite2 = sprites.create(img`
@@ -199,13 +208,21 @@ function create_mini (mediumball: Sprite, goleft: boolean) {
         mySprite2.vx = 50
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Large, function (sprite, otherSprite) {
+    game.gameOver(false)
+})
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Large, function (sprite, otherSprite) {
     create_medium(otherSprite, true)
     create_medium(otherSprite, false)
     sprites.destroy(sprite)
     sprites.destroy(otherSprite)
+    info.changeScoreBy(1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.medium, function (sprite, otherSprite) {
+    game.gameOver(false)
 })
 let projectile: Sprite = null
+let list: Sprite[] = []
 let mySprite2: Sprite = null
 let mySprite: Sprite = null
 mySprite = sprites.create(img`
@@ -230,3 +247,13 @@ mySprite.bottom = 120
 mySprite.setStayInScreen(true)
 controller.moveSprite(mySprite, 100, 0)
 create_large_bubble()
+create_large_bubble()
+game.onUpdate(function () {
+    list = sprites.allOfKind(SpriteKind.Projectile)
+    for (let value of list) {
+        if (value.top <= 0) {
+            value.vy = 0
+            value.top = 0
+        }
+    }
+})
