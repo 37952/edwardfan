@@ -1,17 +1,156 @@
 namespace SpriteKind {
     export const Large = SpriteKind.create()
+    export const medium = SpriteKind.create()
+    export const mini = SpriteKind.create()
+}
+function create_medium (largeball: Sprite, goleft: boolean) {
+    mySprite2 = sprites.create(img`
+        . . . . . . . . 
+        . 2 2 2 2 2 . . 
+        2 2 2 2 2 2 2 . 
+        2 2 9 9 9 2 2 . 
+        2 2 9 9 9 2 2 . 
+        2 2 9 9 9 2 2 . 
+        2 2 2 2 2 2 2 . 
+        . 2 2 2 2 2 . . 
+        `, SpriteKind.medium)
+    mySprite2.setPosition(largeball.x, largeball.y)
+    mySprite2.setBounceOnWall(true)
+    mySprite2.ay = 120
+    mySprite2.vx = 50
+    if (goleft) {
+        mySprite2.vx = -49
+    } else {
+        mySprite2.vx = 50
+    }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
-        . 2 . 
-        . 4 . 
-        . 4 . 
-        4 5 4 
-        5 5 5 
-        5 5 5 
-        5 5 5 
-        5 . 5 
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .2.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        .1.
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
+        111
         `, mySprite, 0, -200)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.mini, function (sprite, otherSprite) {
+    sprites.destroy(sprite)
+    sprites.destroy(otherSprite, effects.fire, 500)
 })
 function create_large_bubble () {
     mySprite2 = sprites.create(img`
@@ -37,12 +176,37 @@ function create_large_bubble () {
     mySprite2.ay = 120
     mySprite2.vx = 50
 }
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Large, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.medium, function (sprite, otherSprite) {
+    create_mini(otherSprite, true)
+    create_mini(otherSprite, false)
     sprites.destroy(sprite)
     sprites.destroy(otherSprite)
 })
-let mySprite2: Sprite = null
+function create_mini (mediumball: Sprite, goleft: boolean) {
+    mySprite2 = sprites.create(img`
+        2 2 2 2 
+        2 9 6 2 
+        2 6 9 2 
+        2 2 2 2 
+        `, SpriteKind.mini)
+    mySprite2.setPosition(mediumball.x, mediumball.y)
+    mySprite2.setBounceOnWall(true)
+    mySprite2.ay = 120
+    mySprite2.vx = 50
+    if (goleft) {
+        mySprite2.vx = -49
+    } else {
+        mySprite2.vx = 50
+    }
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Large, function (sprite, otherSprite) {
+    create_medium(otherSprite, true)
+    create_medium(otherSprite, false)
+    sprites.destroy(sprite)
+    sprites.destroy(otherSprite)
+})
 let projectile: Sprite = null
+let mySprite2: Sprite = null
 let mySprite: Sprite = null
 mySprite = sprites.create(img`
     . . . . . . e e e e e . . . . . 
